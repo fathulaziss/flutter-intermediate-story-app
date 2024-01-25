@@ -4,6 +4,7 @@ import 'package:flutter_intermediate_story_app/data/repositories/auth_repository
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
 import 'package:flutter_intermediate_story_app/routes/page_information_parser.dart';
 import 'package:flutter_intermediate_story_app/routes/router_delegate.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   usePathUrlStrategy();
@@ -33,14 +34,22 @@ class _MyAppState extends State<StoryApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return ChangeNotifierProvider(
+      create: (context) => authProvider,
+      child: MaterialApp.router(
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          appBarTheme: const AppBarTheme(
+            color: Colors.deepPurple,
+            titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
+            iconTheme: IconThemeData(color: Colors.white),
+          ),
+        ),
+        routerDelegate: myRouterDelegate,
+        routeInformationParser: myRouteInformationParser,
+        backButtonDispatcher: RootBackButtonDispatcher(),
       ),
-      routerDelegate: myRouterDelegate,
-      routeInformationParser: myRouteInformationParser,
-      backButtonDispatcher: RootBackButtonDispatcher(),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/data/repositories/auth_repository.dart';
 import 'package:flutter_intermediate_story_app/routes/page_configuration.dart';
 import 'package:flutter_intermediate_story_app/screen/login_screen.dart';
+import 'package:flutter_intermediate_story_app/screen/register_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/splash_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/home_screen.dart';
 
@@ -37,11 +38,45 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
       ];
 
   List<Page> get _loggedOutStack => [
-        const MaterialPage(key: ValueKey("LoginPage"), child: LoginScreen()),
+        MaterialPage(
+          key: const ValueKey("LoginPage"),
+          child: LoginScreen(
+            onLogin: () {
+              isLoggedIn = true;
+              notifyListeners();
+            },
+            onRegister: () {
+              isRegister = true;
+              notifyListeners();
+            },
+          ),
+        ),
+        if (isRegister)
+          MaterialPage(
+            key: const ValueKey("RegisterPage"),
+            child: RegisterScreen(
+              onRegister: () {
+                isRegister = false;
+                notifyListeners();
+              },
+              onLogin: () {
+                isRegister = false;
+                notifyListeners();
+              },
+            ),
+          ),
       ];
 
   List<Page> get _loggedInStack => [
-        const MaterialPage(key: ValueKey("HomePage"), child: HomeScreen()),
+        MaterialPage(
+          key: const ValueKey("HomePage"),
+          child: HomeScreen(
+            onLogout: () {
+              isLoggedIn = false;
+              notifyListeners();
+            },
+          ),
+        ),
       ];
 
   @override
