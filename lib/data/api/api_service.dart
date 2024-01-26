@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter_intermediate_story_app/data/model/response_login_model.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_model.dart';
@@ -50,7 +49,39 @@ class ApiService {
       headers: {'Authorization': 'Bearer $token'},
     );
 
-    log('cek response : ${jsonDecode(response.body)}');
     return ResponseStoriesDetailModel.fromMap(jsonDecode(response.body));
+  }
+
+  Future<ResponseModel> uploadStory({
+    required String token,
+    required List<int> bytesPhoto,
+    required String fileName,
+    required String description,
+  }) async {
+    const url = 'https://story-api.dicoding.dev/v1/stories';
+    final request = http.MultipartRequest('POST', Uri.parse(url));
+    final multiPartFile =
+        http.MultipartFile.fromBytes('photo', bytesPhoto, filename: fileName);
+    final fields = {'description': description};
+    final headers = {
+      'Content-type': 'multipart/form-data',
+      'Authorization': 'Bearer $token',
+    };
+
+    request.files.add(multiPartFile);
+    request.fields.addAll(fields);
+    request.headers.addAll(headers);
+
+    final streamedResponse = await request.send();
+    final statusCode = streamedResponse.statusCode;
+
+    final responseList = await streamedResponse.stream.toBytes();
+    final responseData = String.fromCharCodes(responseList);
+
+    if (statusCode == 201) {
+      return ResponseModel.fromMap(jsonDecode(responseData));
+    } else {
+      throw Exception('Upload file error');
+    }
   }
 }

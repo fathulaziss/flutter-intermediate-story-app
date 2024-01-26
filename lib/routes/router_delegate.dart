@@ -8,7 +8,8 @@ import 'package:flutter_intermediate_story_app/screen/home_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/login_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/register_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/splash_screen.dart';
-import 'package:flutter_intermediate_story_app/screen/stories_detail.dart';
+import 'package:flutter_intermediate_story_app/screen/stories_add_screen.dart';
+import 'package:flutter_intermediate_story_app/screen/stories_detail_screen.dart';
 
 class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -25,12 +26,10 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
   bool isRegister = false;
   bool? isUnknown;
   String? selectedStory;
+  bool? isAddStory;
 
   Future<void> _init() async {
     isLoggedIn = await authRepository.isLoggedIn();
-    if (kDebugMode) {
-      log('cek isLoggedIn : $isLoggedIn');
-    }
     notifyListeners();
   }
 
@@ -76,8 +75,12 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
               isLoggedIn = false;
               notifyListeners();
             },
-            onTapped: (String storyId) {
+            onStoryDetail: (String storyId) {
               selectedStory = storyId;
+              notifyListeners();
+            },
+            onAddStory: () async {
+              isAddStory = true;
               notifyListeners();
             },
           ),
@@ -85,7 +88,17 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         if (selectedStory != null)
           MaterialPage(
             key: const ValueKey('StoriesDetailPage'),
-            child: StoriesDetail(storyId: '$selectedStory'),
+            child: StoriesDetailScreen(storyId: '$selectedStory'),
+          ),
+        if (isAddStory == true)
+          MaterialPage(
+            key: const ValueKey('AddStoryPage'),
+            child: StoriesAddScreen(
+              onUpload: () {
+                isAddStory = null;
+                notifyListeners();
+              },
+            ),
           ),
       ];
 
@@ -111,6 +124,7 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
 
         isRegister = false;
         selectedStory = null;
+        isAddStory = null;
         notifyListeners();
 
         return true;
@@ -133,11 +147,17 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         configuration.isSplashPage) {
       isUnknown = false;
       selectedStory = null;
+      isAddStory = null;
       isRegister = false;
     } else if (configuration.isStoriesDetailPage) {
       isUnknown = false;
       isRegister = false;
       selectedStory = configuration.storyId.toString();
+    } else if (configuration.isAddStoryPage) {
+      isUnknown = false;
+      isRegister = false;
+      selectedStory = null;
+      isAddStory = true;
     } else {
       if (kDebugMode) {
         log('Could not set new route');
@@ -160,6 +180,8 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
       return PageConfiguration.home();
     } else if (selectedStory != null) {
       return PageConfiguration.storiesDetail(selectedStory!);
+    } else if (isAddStory == true) {
+      return PageConfiguration.addStory();
     } else {
       return null;
     }

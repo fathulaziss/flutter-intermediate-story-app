@@ -20,6 +20,16 @@ class MyRouteInformationParser
         return PageConfiguration.register();
       } else if (pathSegmentFirst == 'home') {
         return PageConfiguration.home();
+      } else if (pathSegmentFirst == 'stories-add') {
+        return PageConfiguration.addStory();
+      } else {
+        return PageConfiguration.unknown();
+      }
+    } else if (uri.pathSegments.length == 2) {
+      final first = uri.pathSegments[0].toLowerCase();
+      final second = uri.pathSegments[1].toLowerCase();
+      if (first == 'stories-detail') {
+        return PageConfiguration.storiesDetail(second);
       } else {
         return PageConfiguration.unknown();
       }
@@ -40,6 +50,12 @@ class MyRouteInformationParser
       return RouteInformation(uri: Uri.parse('/login'));
     } else if (configuration.isHomePage) {
       return RouteInformation(uri: Uri.parse('/'));
+    } else if (configuration.isStoriesDetailPage) {
+      return RouteInformation(
+        uri: Uri.parse('/stories-detail/${configuration.storyId}'),
+      );
+    } else if (configuration.isAddStoryPage) {
+      return RouteInformation(uri: Uri.parse('/stories-add'));
     } else {
       return null;
     }

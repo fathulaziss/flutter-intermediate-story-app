@@ -4,25 +4,25 @@ import 'package:flutter_intermediate_story_app/data/model/stories_model.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
 import 'package:provider/provider.dart';
 
-class StoriesDetail extends StatefulWidget {
-  const StoriesDetail({super.key, required this.storyId});
+class StoriesDetailScreen extends StatefulWidget {
+  const StoriesDetailScreen({super.key, required this.storyId});
 
   final String storyId;
 
   @override
-  State<StoriesDetail> createState() => _StoriesDetailState();
+  State<StoriesDetailScreen> createState() => _StoriesDetailScreenState();
 }
 
-class _StoriesDetailState extends State<StoriesDetail> {
+class _StoriesDetailScreenState extends State<StoriesDetailScreen> {
   StoriesModel? stories;
 
   @override
   void initState() {
-    getStoriesDetail();
+    getDetailStories();
     super.initState();
   }
 
-  Future<void> getStoriesDetail() async {
+  Future<void> getDetailStories() async {
     final storyRead = context.read<StoryProvider>();
     final result = await storyRead.getStoriesDetail(widget.storyId);
     if (result.error != true) {

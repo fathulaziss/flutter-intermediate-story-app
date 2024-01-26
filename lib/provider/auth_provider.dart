@@ -66,4 +66,6 @@ class AuthProvider extends ChangeNotifier {
     isLoadingLogout = false;
     notifyListeners();
   }
+
+  setImageFile(param0) {}
 }

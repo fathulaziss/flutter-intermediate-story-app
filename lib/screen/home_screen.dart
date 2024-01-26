@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/data/model/stories_model.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
+import 'package:flutter_intermediate_story_app/routes/page_manager.dart';
 import 'package:flutter_intermediate_story_app/widgets/stories_card.dart';
 import 'package:provider/provider.dart';
 
@@ -9,11 +10,13 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     required this.onLogout,
-    required this.onTapped,
+    required this.onStoryDetail,
+    required this.onAddStory,
   });
 
   final Function() onLogout;
-  final Function(String) onTapped;
+  final Function(String) onStoryDetail;
+  final Function() onAddStory;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -64,7 +67,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: IconButton(
-        onPressed: () {},
+        onPressed: () async {
+          context.read<StoryProvider>()
+            ..setImageFile(null)
+            ..setImagePath(null);
+
+          widget.onAddStory();
+
+          final dataString = await context.read<PageManager>().waitForResult();
+          if (dataString.isNotEmpty) {
+            await getStories();
+          }
+        },
         icon: const Icon(
           Icons.add_circle,
           size: 48,
@@ -81,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return StoriesCard(
                       data: data,
                       onTap: () {
-                        widget.onTapped(data.id!);
+                        widget.onStoryDetail(data.id!);
                       },
                     );
                   },
