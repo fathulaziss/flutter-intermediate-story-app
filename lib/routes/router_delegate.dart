@@ -4,20 +4,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/data/repositories/auth_repository.dart';
 import 'package:flutter_intermediate_story_app/routes/page_configuration.dart';
+import 'package:flutter_intermediate_story_app/screen/home_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/login_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/register_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/splash_screen.dart';
-import 'package:flutter_intermediate_story_app/screen/home_screen.dart';
 
 class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
-  final GlobalKey<NavigatorState> _navigatorKey;
-  final AuthRepository authRepository;
-
   MyRouterDelegate(this.authRepository)
       : _navigatorKey = GlobalKey<NavigatorState>() {
     _init();
   }
+
+  final GlobalKey<NavigatorState> _navigatorKey;
+  final AuthRepository authRepository;
 
   List<Page> historyStack = [];
   bool? isLoggedIn;
@@ -34,12 +34,12 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   List<Page> get _splashStack => const [
-        MaterialPage(key: ValueKey("SplashPage"), child: SplashScreen()),
+        MaterialPage(key: ValueKey('SplashPage'), child: SplashScreen()),
       ];
 
   List<Page> get _loggedOutStack => [
         MaterialPage(
-          key: const ValueKey("LoginPage"),
+          key: const ValueKey('LoginPage'),
           child: LoginScreen(
             onLogin: () {
               isLoggedIn = true;
@@ -53,7 +53,7 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         ),
         if (isRegister)
           MaterialPage(
-            key: const ValueKey("RegisterPage"),
+            key: const ValueKey('RegisterPage'),
             child: RegisterScreen(
               onRegister: () {
                 isRegister = false;
@@ -69,7 +69,7 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
 
   List<Page> get _loggedInStack => [
         MaterialPage(
-          key: const ValueKey("HomePage"),
+          key: const ValueKey('HomePage'),
           child: HomeScreen(
             onLogout: () {
               isLoggedIn = false;

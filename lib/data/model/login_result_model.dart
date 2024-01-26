@@ -20,4 +20,9 @@ class LoginResultModel {
   Map<String, dynamic> toMap() {
     return {'userId': userId, 'name': name, 'token': token};
   }
+
+  @override
+  String toString() {
+    return 'LoginResultModel(userId: $userId, name: $name, token: $token)';
+  }
 }

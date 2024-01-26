@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_intermediate_story_app/data/model/response_login_model.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_model.dart';
+import 'package:flutter_intermediate_story_app/data/model/response_stories_model.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -10,7 +11,7 @@ class ApiService {
     required String email,
     required String password,
   }) async {
-    const url = "https://story-api.dicoding.dev/v1/register";
+    const url = 'https://story-api.dicoding.dev/v1/register';
     final body = {'name': name, 'email': email, 'password': password};
     final response = await http.post(Uri.parse(url), body: body);
     return ResponseModel.fromMap(jsonDecode(response.body));
@@ -20,9 +21,19 @@ class ApiService {
     required String email,
     required String password,
   }) async {
-    const url = "https://story-api.dicoding.dev/v1/login";
+    const url = 'https://story-api.dicoding.dev/v1/login';
     final body = {'email': email, 'password': password};
     final response = await http.post(Uri.parse(url), body: body);
     return ResponseLoginModel.fromMap(jsonDecode(response.body));
+  }
+
+  Future<ResponseStoriesModel> getStories(String token) async {
+    const url = 'https://story-api.dicoding.dev/v1/stories';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    return ResponseStoriesModel.fromMap(jsonDecode(response.body));
   }
 }

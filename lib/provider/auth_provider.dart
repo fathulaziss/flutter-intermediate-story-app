@@ -4,8 +4,8 @@ import 'package:flutter_intermediate_story_app/data/model/response_model.dart';
 import 'package:flutter_intermediate_story_app/data/repositories/auth_repository.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final AuthRepository authRepository;
   AuthProvider(this.authRepository);
+  final AuthRepository authRepository;
 
   bool isLoadingLogin = false;
   bool isLoadingRegister = false;
@@ -45,7 +45,10 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     final result = await authRepository.register(
-        name: name, email: email, password: password);
+      name: name,
+      email: email,
+      password: password,
+    );
 
     isLoadingRegister = false;
     notifyListeners();

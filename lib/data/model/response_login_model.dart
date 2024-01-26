@@ -4,7 +4,12 @@ class ResponseLoginModel {
   ResponseLoginModel({this.error, this.message, this.loginResult});
 
   factory ResponseLoginModel.fromMap(Map<String, dynamic> map) {
-    return ResponseLoginModel(error: map['error'], message: map['message']);
+    return ResponseLoginModel(
+      error: map['error'],
+      message: map['message'],
+      loginResult:
+          LoginResultModel.fromMap(map['loginResult'] as Map<String, dynamic>),
+    );
   }
 
   bool? error;

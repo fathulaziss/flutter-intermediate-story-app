@@ -4,10 +4,10 @@ import 'package:flutter_intermediate_story_app/data/model/response_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
-  final String stateKey = "state";
-  final String userIdKey = "user_id";
-  final String nameKey = "name";
-  final String tokenKey = "token";
+  final String stateKey = 'state';
+  final String userIdKey = 'user_id';
+  final String nameKey = 'name';
+  final String tokenKey = 'token';
 
   Future<bool> isLoggedIn() async {
     final preferences = await SharedPreferences.getInstance();
@@ -15,8 +15,10 @@ class AuthRepository {
     return preferences.getBool(stateKey) ?? false;
   }
 
-  Future<ResponseLoginModel> login(
-      {required String email, required String password}) async {
+  Future<ResponseLoginModel> login({
+    required String email,
+    required String password,
+  }) async {
     final preferences = await SharedPreferences.getInstance();
     final result = await ApiService().login(email: email, password: password);
     if (result.error != true) {

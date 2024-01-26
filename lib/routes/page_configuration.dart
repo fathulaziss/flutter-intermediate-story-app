@@ -1,8 +1,4 @@
 class PageConfiguration {
-  final bool unknown;
-  final bool register;
-  final bool? loggedIn;
-
   PageConfiguration.splash()
       : unknown = false,
         register = false,
@@ -27,6 +23,10 @@ class PageConfiguration {
       : unknown = true,
         register = false,
         loggedIn = null;
+
+  final bool unknown;
+  final bool register;
+  final bool? loggedIn;
 
   bool get isSplashPage =>
       unknown == false && register == false && loggedIn == null;

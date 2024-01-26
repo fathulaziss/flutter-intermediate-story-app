@@ -52,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(hintText: "Full Name"),
+                  decoration: const InputDecoration(hintText: 'Full Name'),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -63,13 +63,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(hintText: "Email"),
+                  decoration: const InputDecoration(hintText: 'Email'),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(hintText: "Password"),
+                  decoration: const InputDecoration(hintText: 'Password'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password.';
@@ -78,34 +78,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: 8),
-                context.watch<AuthProvider>().isLoadingRegister
-                    ? const Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            final scaffoldMessenger =
-                                ScaffoldMessenger.of(context);
+                if (context.watch<AuthProvider>().isLoadingRegister)
+                  const Center(child: CircularProgressIndicator())
+                else
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-                            final authRead = context.read<AuthProvider>();
-                            final result = await authRead.register(
-                              name: nameController.text,
-                              email: emailController.text,
-                              password: passwordController.text,
-                            );
+                        final authRead = context.read<AuthProvider>();
+                        final result = await authRead.register(
+                          name: nameController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
 
-                            scaffoldMessenger.showSnackBar(
-                              SnackBar(content: Text('${result.message}')),
-                            );
+                        scaffoldMessenger.showSnackBar(
+                          SnackBar(content: Text('${result.message}')),
+                        );
 
-                            if (result.error != true) widget.onRegister();
-                          }
-                        },
-                        child: const Text("REGISTER"),
-                      ),
+                        if (result.error != true) widget.onRegister();
+                      }
+                    },
+                    child: const Text('REGISTER'),
+                  ),
                 const SizedBox(height: 8),
                 OutlinedButton(
                   onPressed: () => widget.onLogin(),
-                  child: const Text("LOGIN"),
+                  child: const Text('LOGIN'),
                 ),
               ],
             ),
