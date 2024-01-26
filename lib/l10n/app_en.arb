@@ -1,0 +1,13 @@
+{
+    "splashScreenText": "Loading Splash Screen",
+    "loginAppBar": "Login Screen",
+    "loginButton": "LOGIN",
+    "registerButton": "REGISTER",
+    "email": "Email",
+    "emailValidator": "Please enter your email.",
+    "password": "Password",
+    "passwordValidator" : "Please enter your password.",
+    "registerAppBar": "Register Screen",
+    "fullName": "Full Name",
+    "fullNameValidator": "Please enter your full name."
+}

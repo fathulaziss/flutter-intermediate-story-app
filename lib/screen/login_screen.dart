@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
+import 'package:flutter_intermediate_story_app/widgets/flag_icon.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -32,7 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login Screen')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.loginAppBar),
+        actions: const [FlagIcon()],
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 300),
@@ -46,20 +51,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email.';
+                      return AppLocalizations.of(context)!.emailValidator;
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(hintText: 'Email'),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.email,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(hintText: 'Password'),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.password,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password.';
+                      return AppLocalizations.of(context)!.passwordValidator;
                     }
                     return null;
                   },
@@ -88,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (result.error != true) widget.onLogin();
                       }
                     },
-                    child: const Text('LOGIN'),
+                    child: Text(AppLocalizations.of(context)!.loginButton),
                   ),
                 const SizedBox(height: 8),
                 OutlinedButton(
@@ -96,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FocusManager.instance.primaryFocus?.unfocus();
                     widget.onRegister();
                   },
-                  child: const Text('REGISTER'),
+                  child: Text(AppLocalizations.of(context)!.registerButton),
                 ),
               ],
             ),

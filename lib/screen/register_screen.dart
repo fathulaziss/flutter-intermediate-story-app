@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register Screen')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.registerAppBar)),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 300),
@@ -48,31 +49,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your full name.';
+                      return AppLocalizations.of(context)!.fullNameValidator;
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(hintText: 'Full Name'),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.fullName,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email.';
+                      return AppLocalizations.of(context)!.emailValidator;
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(hintText: 'Email'),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.email,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(hintText: 'Password'),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.password,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password.';
+                      return AppLocalizations.of(context)!.passwordValidator;
                     }
                     return null;
                   },
@@ -102,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (result.error != true) widget.onRegister();
                       }
                     },
-                    child: const Text('REGISTER'),
+                    child: Text(AppLocalizations.of(context)!.registerButton),
                   ),
                 const SizedBox(height: 8),
                 OutlinedButton(
@@ -110,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     FocusManager.instance.primaryFocus?.unfocus();
                     widget.onLogin();
                   },
-                  child: const Text('LOGIN'),
+                  child: Text(AppLocalizations.of(context)!.loginButton),
                 ),
               ],
             ),

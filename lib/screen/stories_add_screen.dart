@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
-import 'package:flutter_intermediate_story_app/routes/page_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -97,7 +97,7 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                           descriptionController.clear();
                           widget.onUpload();
                           if (context.mounted) {
-                            context.read<PageManager>().returnData('success');
+                            context.read<PageProvider>().returnData('success');
                           }
                         }
                       } else {

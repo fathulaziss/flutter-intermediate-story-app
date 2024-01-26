@@ -1,0 +1,46 @@
+{
+    "splashScreenText": "Memuat Halaman Splash",
+    "@splashScreenText": {
+      "description": "Deskripsi mengenai variabel splashScreenText"
+    },
+    "loginAppBar": "Halaman Masuk",
+    "@loginAppBar": {
+      "description": "Deskripsi variabel loginAppBar"
+    },
+    "loginButton": "MASUK",
+    "@loginButton": {
+      "description": "Deskripsi variabel loginButton"
+    },
+    "registerButton": "DAFTAR",
+    "@registerButton": {
+      "description": "Deskripsi variabel registerButton"
+    },
+    "email": "Email",
+    "@email": {
+      "description": "Deskripsi variabel email"
+    },
+    "emailValidator": "Mohon masukkan email Anda",
+    "@emailValidator": {
+      "description": "Deskripsi variabel emailValidator"
+    },
+    "password": "Kata Sandi",
+    "@password": {
+      "description": "Deskripsi variabel password"
+    },
+    "passwordValidator": "Mohon masukkan kata sandi Anda",
+    "@passwordValidator": {
+      "description": "Deskripsi variabel passwordValidator"
+    },
+    "registerAppBar": "Halaman Daftar",
+    "@registerAppBar": {
+      "description": "Deskripsi variabel registerAppBar"
+    },
+    "fullName": "Nama Lengkap",
+    "@fullName": {
+      "description": "Deskripsi variabel fullName"
+    },
+    "fullNameValidator": "Mohon masukkan nama lengkap Anda",
+    "@fullNameValidator": {
+      "description": "Deskripsi variabel fullNameValidator"
+    }
+}

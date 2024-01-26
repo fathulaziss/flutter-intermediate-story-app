@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class PageManager extends ChangeNotifier {
+class PageProvider extends ChangeNotifier {
   late Completer<String> _completer;
 
   Future<String> waitForResult() async {

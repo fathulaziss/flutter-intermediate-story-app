@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/data/model/stories_model.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
+import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
-import 'package:flutter_intermediate_story_app/routes/page_manager.dart';
 import 'package:flutter_intermediate_story_app/widgets/stories_card.dart';
 import 'package:provider/provider.dart';
 
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           widget.onAddStory();
 
-          final dataString = await context.read<PageManager>().waitForResult();
+          final dataString = await context.read<PageProvider>().waitForResult();
           if (dataString.isNotEmpty) {
             await getStories();
           }
