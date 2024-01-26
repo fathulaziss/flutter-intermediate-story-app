@@ -8,6 +8,7 @@ import 'package:flutter_intermediate_story_app/screen/home_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/login_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/register_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/splash_screen.dart';
+import 'package:flutter_intermediate_story_app/screen/stories_detail.dart';
 
 class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -75,8 +76,17 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
               isLoggedIn = false;
               notifyListeners();
             },
+            onTapped: (String storyId) {
+              selectedStory = storyId;
+              notifyListeners();
+            },
           ),
         ),
+        if (selectedStory != null)
+          MaterialPage(
+            key: const ValueKey('StoriesDetailPage'),
+            child: StoriesDetail(storyId: '$selectedStory'),
+          ),
       ];
 
   @override
@@ -122,7 +132,12 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         configuration.isLoginPage ||
         configuration.isSplashPage) {
       isUnknown = false;
+      selectedStory = null;
       isRegister = false;
+    } else if (configuration.isStoriesDetailPage) {
+      isUnknown = false;
+      isRegister = false;
+      selectedStory = configuration.storyId.toString();
     } else {
       if (kDebugMode) {
         log('Could not set new route');
@@ -143,6 +158,8 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
       return PageConfiguration.unknown();
     } else if (selectedStory == null) {
       return PageConfiguration.home();
+    } else if (selectedStory != null) {
+      return PageConfiguration.storiesDetail(selectedStory!);
     } else {
       return null;
     }

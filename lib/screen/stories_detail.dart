@@ -1,0 +1,74 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_intermediate_story_app/data/model/stories_model.dart';
+import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
+import 'package:provider/provider.dart';
+
+class StoriesDetail extends StatefulWidget {
+  const StoriesDetail({super.key, required this.storyId});
+
+  final String storyId;
+
+  @override
+  State<StoriesDetail> createState() => _StoriesDetailState();
+}
+
+class _StoriesDetailState extends State<StoriesDetail> {
+  StoriesModel? stories;
+
+  @override
+  void initState() {
+    getStoriesDetail();
+    super.initState();
+  }
+
+  Future<void> getStoriesDetail() async {
+    final storyRead = context.read<StoryProvider>();
+    final result = await storyRead.getStoriesDetail(widget.storyId);
+    if (result.error != true) {
+      stories = result.story;
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Story Detail')),
+      body: context.watch<StoryProvider>().isLoadingStoriesDetail
+          ? const Center(child: CircularProgressIndicator())
+          : stories != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: stories!.photoUrl!,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 4,
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder: (context, url, progress) {
+                        return CircularProgressIndicator(
+                          value: progress.progress,
+                        );
+                      },
+                      errorWidget: (context, url, error) {
+                        return const Icon(Icons.error);
+                      },
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      stories!.name!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(stories!.description!),
+                    Text('${stories!.lat!}'),
+                    Text('${stories!.lon!}'),
+                  ],
+                )
+              : const Center(child: Text('Data tidak ditemukan')),
+    );
+  }
+}

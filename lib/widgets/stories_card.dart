@@ -13,7 +13,7 @@ class StoriesCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: double.infinity,
+        width: MediaQuery.of(context).size.width,
         color: Colors.amber,
         margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
         padding: const EdgeInsets.all(12),

@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_intermediate_story_app/data/model/response_login_model.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_model.dart';
+import 'package:flutter_intermediate_story_app/data/model/response_stories_detail_model.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_stories_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,5 +37,20 @@ class ApiService {
       headers: {'Authorization': 'Bearer $token'},
     );
     return ResponseStoriesModel.fromMap(jsonDecode(response.body));
+  }
+
+  Future<ResponseStoriesDetailModel> getStoriesDetail({
+    required String token,
+    required String storyId,
+  }) async {
+    final url = 'https://story-api.dicoding.dev/v1/stories/:$storyId';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    log('cek response : ${jsonDecode(response.body)}');
+    return ResponseStoriesDetailModel.fromMap(jsonDecode(response.body));
   }
 }

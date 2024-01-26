@@ -84,6 +84,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+
                         final scaffoldMessenger = ScaffoldMessenger.of(context);
 
                         final authRead = context.read<AuthProvider>();
@@ -104,7 +106,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 const SizedBox(height: 8),
                 OutlinedButton(
-                  onPressed: () => widget.onLogin(),
+                  onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    widget.onLogin();
+                  },
                   child: const Text('LOGIN'),
                 ),
               ],

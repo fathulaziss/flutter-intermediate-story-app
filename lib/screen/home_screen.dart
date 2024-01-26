@@ -6,9 +6,14 @@ import 'package:flutter_intermediate_story_app/widgets/stories_card.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.onLogout});
+  const HomeScreen({
+    super.key,
+    required this.onLogout,
+    required this.onTapped,
+  });
 
   final Function() onLogout;
+  final Function(String) onTapped;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -73,10 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: listStory?.length,
                   itemBuilder: (context, index) {
                     final data = listStory![index];
-                    return StoriesCard(data: data, onTap: () {});
+                    return StoriesCard(
+                      data: data,
+                      onTap: () {
+                        widget.onTapped(data.id!);
+                      },
+                    );
                   },
                 )
-              : const SizedBox(),
+              : const Center(child: Text('Data tidak ditemukan')),
     );
   }
 }
