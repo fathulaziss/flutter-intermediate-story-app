@@ -64,8 +64,8 @@ class _StoriesDetailScreenState extends State<StoriesDetailScreen> {
                       ),
                     ),
                     Text(stories!.description!),
-                    Text('${stories!.lat!}'),
-                    Text('${stories!.lon!}'),
+                    Text('${stories?.lat ?? '-'}'),
+                    Text('${stories?.lon ?? '-'}'),
                   ],
                 )
               : const Center(child: Text('Data tidak ditemukan')),

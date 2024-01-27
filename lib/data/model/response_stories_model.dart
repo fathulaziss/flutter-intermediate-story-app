@@ -7,11 +7,13 @@ class ResponseStoriesModel {
     return ResponseStoriesModel(
       error: map['error'],
       message: map['message'],
-      listStory: List<StoriesModel>.from(
-        (map['listStory'] as List).map((e) {
-          return StoriesModel.fromMap(e);
-        }),
-      ),
+      listStory: map['listStory'] != null
+          ? List<StoriesModel>.from(
+              (map['listStory'] as List).map((e) {
+                return StoriesModel.fromMap(e);
+              }),
+            )
+          : [],
     );
   }
 

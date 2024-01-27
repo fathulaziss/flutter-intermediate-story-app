@@ -7,8 +7,9 @@ class ResponseLoginModel {
     return ResponseLoginModel(
       error: map['error'],
       message: map['message'],
-      loginResult:
-          LoginResultModel.fromMap(map['loginResult'] as Map<String, dynamic>),
+      loginResult: map['loginResult'] != null
+          ? LoginResultModel.fromMap(map['loginResult'])
+          : LoginResultModel(),
     );
   }
 

@@ -42,7 +42,7 @@ class ApiService {
     required String token,
     required String storyId,
   }) async {
-    final url = 'https://story-api.dicoding.dev/v1/stories/:$storyId';
+    final url = 'https://story-api.dicoding.dev/v1/stories/$storyId';
 
     final response = await http.get(
       Uri.parse(url),
