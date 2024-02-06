@@ -1,33 +1,24 @@
 import 'package:flutter_intermediate_story_app/data/model/stories_model.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'response_stories_model.g.dart';
+
+@JsonSerializable()
 class ResponseStoriesModel {
-  ResponseStoriesModel({this.error, this.message, this.listStory});
+  ResponseStoriesModel({
+    this.error = false,
+    this.message = '',
+    this.listStory = const [],
+  });
 
-  factory ResponseStoriesModel.fromMap(Map<String, dynamic> map) {
-    return ResponseStoriesModel(
-      error: map['error'],
-      message: map['message'],
-      listStory: map['listStory'] != null
-          ? List<StoriesModel>.from(
-              (map['listStory'] as List).map((e) {
-                return StoriesModel.fromMap(e);
-              }),
-            )
-          : [],
-    );
-  }
+  factory ResponseStoriesModel.fromJson(Map<String, dynamic> json) =>
+      _$ResponseStoriesModelFromJson(json);
 
-  bool? error;
-  String? message;
-  List<StoriesModel>? listStory;
+  bool error;
+  String message;
+  List<StoriesModel> listStory;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'error': error,
-      'message': message,
-      'listStory': List.from(listStory!.map((e) => e.toMap())),
-    };
-  }
+  Map<String, dynamic> toJson() => _$ResponseStoriesModelToJson(this);
 
   @override
   String toString() {

@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'login_result_model.g.dart';
+
+@JsonSerializable()
 class LoginResultModel {
   LoginResultModel({
     this.userId,
@@ -5,21 +10,14 @@ class LoginResultModel {
     this.token,
   });
 
-  factory LoginResultModel.fromMap(Map<String, dynamic> map) {
-    return LoginResultModel(
-      userId: map['userId'],
-      name: map['name'],
-      token: map['token'],
-    );
-  }
+  factory LoginResultModel.fromJson(Map<String, dynamic> json) =>
+      _$LoginResultModelFromJson(json);
 
   String? userId;
   String? name;
   String? token;
 
-  Map<String, dynamic> toMap() {
-    return {'userId': userId, 'name': name, 'token': token};
-  }
+  Map<String, dynamic> toJson() => _$LoginResultModelToJson(this);
 
   @override
   String toString() {

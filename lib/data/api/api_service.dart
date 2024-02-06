@@ -15,7 +15,7 @@ class ApiService {
     const url = 'https://story-api.dicoding.dev/v1/register';
     final body = {'name': name, 'email': email, 'password': password};
     final response = await http.post(Uri.parse(url), body: body);
-    return ResponseModel.fromMap(jsonDecode(response.body));
+    return ResponseModel.fromJson(jsonDecode(response.body));
   }
 
   Future<ResponseLoginModel> login({
@@ -25,7 +25,7 @@ class ApiService {
     const url = 'https://story-api.dicoding.dev/v1/login';
     final body = {'email': email, 'password': password};
     final response = await http.post(Uri.parse(url), body: body);
-    return ResponseLoginModel.fromMap(jsonDecode(response.body));
+    return ResponseLoginModel.fromJson(jsonDecode(response.body));
   }
 
   Future<ResponseStoriesModel> getStories(
@@ -41,7 +41,7 @@ class ApiService {
       Uri.parse(url),
       headers: {'Authorization': 'Bearer $token'},
     );
-    return ResponseStoriesModel.fromMap(jsonDecode(response.body));
+    return ResponseStoriesModel.fromJson(jsonDecode(response.body));
   }
 
   Future<ResponseStoriesDetailModel> getStoriesDetail({
@@ -54,7 +54,7 @@ class ApiService {
       Uri.parse(url),
       headers: {'Authorization': 'Bearer $token'},
     );
-    return ResponseStoriesDetailModel.fromMap(jsonDecode(response.body));
+    return ResponseStoriesDetailModel.fromJson(jsonDecode(response.body));
   }
 
   Future<ResponseModel> uploadStory({
@@ -84,7 +84,7 @@ class ApiService {
     final responseData = String.fromCharCodes(responseList);
 
     if (statusCode == 201) {
-      return ResponseModel.fromMap(jsonDecode(responseData));
+      return ResponseModel.fromJson(jsonDecode(responseData));
     } else {
       throw Exception('Upload file error');
     }

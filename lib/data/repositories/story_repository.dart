@@ -48,7 +48,7 @@ class StoryRepository {
   Future<List<int>> compressImage(Uint8List bytes) async {
     final imageLength = bytes.length;
     if (imageLength < 1000000) return bytes;
-    final image = img.decodeImage(bytes)!;
+    final image = img.decodeImage(bytes);
     var compressQuality = 100;
     var length = imageLength;
     var newByte = <int>[];
@@ -56,7 +56,7 @@ class StoryRepository {
       ///
       compressQuality -= 10;
       newByte = img.encodeJpg(
-        image,
+        image!,
         quality: compressQuality,
       );
       length = newByte.length;

@@ -1,16 +1,18 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'response_model.g.dart';
+
+@JsonSerializable()
 class ResponseModel {
   ResponseModel({this.error, this.message});
 
-  factory ResponseModel.fromMap(Map<String, dynamic> map) {
-    return ResponseModel(error: map['error'], message: map['message']);
-  }
+  factory ResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$ResponseModelFromJson(json);
 
   bool? error;
   String? message;
 
-  Map<String, dynamic> toMap() {
-    return {'error': error, 'message': message};
-  }
+  Map<String, dynamic> toJson() => _$ResponseModelToJson(this);
 
   @override
   String toString() {

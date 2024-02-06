@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'stories_model.g.dart';
+
+@JsonSerializable()
 class StoriesModel {
   StoriesModel({
     this.id,
@@ -9,17 +14,8 @@ class StoriesModel {
     this.lon,
   });
 
-  factory StoriesModel.fromMap(Map<String, dynamic> map) {
-    return StoriesModel(
-      id: map['id'],
-      name: map['name'],
-      description: map['description'],
-      photoUrl: map['photoUrl'],
-      createdAt: map['createdAt'],
-      lat: map['lat'],
-      lon: map['lon'],
-    );
-  }
+  factory StoriesModel.fromJson(Map<String, dynamic> json) =>
+      _$StoriesModelFromJson(json);
 
   String? id;
   String? name;
@@ -29,17 +25,7 @@ class StoriesModel {
   double? lat;
   double? lon;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'photoUrl': photoUrl,
-      'createdAt': createdAt,
-      'lat': lat,
-      'lon': lon,
-    };
-  }
+  Map<String, dynamic> toJson() => _$StoriesModelToJson(this);
 
   @override
   String toString() {

@@ -31,10 +31,10 @@ class StoryProvider extends ChangeNotifier {
     if (pageItems == 1) {
       _listStory
         ..clear()
-        ..addAll(result.listStory!);
+        ..addAll(result.listStory);
     } else {
-      if (result.listStory!.isNotEmpty) {
-        for (final item in result.listStory!) {
+      if (result.listStory.isNotEmpty) {
+        for (final item in result.listStory) {
           if (!_listStory.map((e) => e.id).toList().contains(item.id)) {
             _listStory.add(item);
           }
@@ -42,7 +42,7 @@ class StoryProvider extends ChangeNotifier {
       }
     }
 
-    if (result.listStory!.length < sizeItems) {
+    if (result.listStory.length < sizeItems) {
       pageItems = pageItems;
     } else {
       pageItems = pageItems! + 1;
