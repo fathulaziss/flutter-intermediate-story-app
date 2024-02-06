@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_intermediate_story_app/data/model/stories_model.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
@@ -23,21 +22,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<StoriesModel>? listStory;
+  final scrollController = ScrollController();
 
   @override
   void initState() {
-    getStories();
     super.initState();
+    final storyRead = context.read<StoryProvider>();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent) {
+        storyRead.getStories();
+      }
+    });
+
+    Future.microtask(() async => storyRead.getStories());
   }
 
-  Future<void> getStories() async {
-    final storyRead = context.read<StoryProvider>();
-    final result = await storyRead.getStories();
-    if (result.listStory!.isNotEmpty) {
-      listStory = result.listStory;
-      setState(() {});
-    }
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -75,8 +80,12 @@ class _HomeScreenState extends State<HomeScreen> {
           widget.onAddStory();
 
           final dataString = await context.read<PageProvider>().waitForResult();
+
           if (dataString.isNotEmpty) {
-            await getStories();
+            if (context.mounted) {
+              context.read<StoryProvider>().setPageItem(1);
+              await context.read<StoryProvider>().getStories();
+            }
           }
         },
         icon: const Icon(
@@ -85,22 +94,66 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.deepPurple,
         ),
       ),
-      body: context.watch<StoryProvider>().isLoadingStories
-          ? const Center(child: CircularProgressIndicator())
-          : listStory!.isNotEmpty
-              ? ListView.builder(
-                  itemCount: listStory?.length,
-                  itemBuilder: (context, index) {
-                    final data = listStory![index];
-                    return StoriesCard(
-                      data: data,
-                      onTap: () {
-                        widget.onStoryDetail(data.id!);
-                      },
-                    );
+      body: Consumer<StoryProvider>(
+        builder: (context, storyProvider, _) {
+          if (storyProvider.isLoadingStories) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (storyProvider.listStory.isNotEmpty) {
+            return ListView.builder(
+              controller: scrollController,
+              itemCount: storyProvider.listStory.length,
+              itemBuilder: (context, index) {
+                final data = storyProvider.listStory[index];
+
+                if (data == storyProvider.listStory.last) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+
+                return StoriesCard(
+                  data: data,
+                  onTap: () {
+                    widget.onStoryDetail(data.id!);
                   },
-                )
-              : const Center(child: Text('Data tidak ditemukan')),
+                );
+              },
+            );
+          }
+          return const Center(child: Text('Data tidak ditemukan'));
+        },
+      ),
+      // body: context.watch<StoryProvider>().isLoadingStories
+      //     ? const Center(child: CircularProgressIndicator())
+      //     : listStory!.isNotEmpty
+      //         ? ListView.builder(
+      //             controller: scrollController,
+      //             itemCount: listStory?.length,
+      //             itemBuilder: (context, index) {
+      //               final data = listStory![index];
+
+      //               if (data == listStory?.last) {
+      //                 return const Center(
+      //                   child: Padding(
+      //                     padding: EdgeInsets.all(8),
+      //                     child: CircularProgressIndicator(),
+      //                   ),
+      //                 );
+      //               }
+
+      //               return StoriesCard(
+      //                 data: data,
+      //                 onTap: () {
+      //                   widget.onStoryDetail(data.id!);
+      //                 },
+      //               );
+      //             },
+      //           )
+      //         : const Center(child: Text('Data tidak ditemukan')),
     );
   }
 }

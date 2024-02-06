@@ -9,10 +9,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class StoryRepository {
   final String tokenKey = 'token';
 
-  Future<ResponseStoriesModel> getStories() async {
+  Future<ResponseStoriesModel> getStories({
+    int location = 0,
+    int? page,
+    int? size,
+  }) async {
     final preferences = await SharedPreferences.getInstance();
     final token = preferences.getString(tokenKey);
-    final result = await ApiService().getStories('$token');
+    final result = await ApiService()
+        .getStories('$token', location: location, page: page, size: size);
     return result;
   }
 

@@ -28,8 +28,14 @@ class ApiService {
     return ResponseLoginModel.fromMap(jsonDecode(response.body));
   }
 
-  Future<ResponseStoriesModel> getStories(String token) async {
-    const url = 'https://story-api.dicoding.dev/v1/stories';
+  Future<ResponseStoriesModel> getStories(
+    String token, {
+    int location = 0,
+    int? page,
+    int? size,
+  }) async {
+    final url =
+        'https://story-api.dicoding.dev/v1/stories?location=$location${page != null ? '&page=$page' : ''}${size != null ? '&size=$size' : ''}';
 
     final response = await http.get(
       Uri.parse(url),
@@ -48,7 +54,6 @@ class ApiService {
       Uri.parse(url),
       headers: {'Authorization': 'Bearer $token'},
     );
-
     return ResponseStoriesDetailModel.fromMap(jsonDecode(response.body));
   }
 

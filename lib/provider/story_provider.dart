@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_model.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_stories_detail_model.dart';
-import 'package:flutter_intermediate_story_app/data/model/response_stories_model.dart';
+import 'package:flutter_intermediate_story_app/data/model/stories_model.dart';
 import 'package:flutter_intermediate_story_app/data/repositories/story_repository.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,18 +13,37 @@ class StoryProvider extends ChangeNotifier {
   bool isLoadingStoriesDetail = false;
   bool isLoadingStoriesUpload = false;
 
+  final List<StoriesModel> _listStory = [];
+  List<StoriesModel> get listStory => _listStory;
+
+  int? pageItems = 1;
+  int sizeItems = 10;
+
   XFile? imageFile;
   String? imagePath;
 
-  Future<ResponseStoriesModel> getStories() async {
+  Future<void> getStories() async {
     isLoadingStories = true;
 
-    final result = await storyRepository.getStories();
+    final result =
+        await storyRepository.getStories(page: pageItems, size: sizeItems);
+
+    if (result.listStory!.isNotEmpty) {
+      for (final item in result.listStory!) {
+        if (!_listStory.map((e) => e.id).toList().contains(item.id)) {
+          _listStory.add(item);
+        }
+      }
+    }
+
+    if (result.listStory!.length < sizeItems) {
+      pageItems = pageItems;
+    } else {
+      pageItems = pageItems! + 1;
+    }
 
     isLoadingStories = false;
     notifyListeners();
-
-    return result;
   }
 
   Future<ResponseStoriesDetailModel> getStoriesDetail(String storyId) async {
@@ -69,6 +88,11 @@ class StoryProvider extends ChangeNotifier {
 
   void setImageFile(XFile? value) {
     imageFile = value;
+    notifyListeners();
+  }
+
+  void setPageItem(int value) {
+    pageItems = value;
     notifyListeners();
   }
 }
