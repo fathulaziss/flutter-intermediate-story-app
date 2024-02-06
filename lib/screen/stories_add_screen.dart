@@ -111,6 +111,12 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                   },
                   child: const Text('Upload'),
                 ),
+              ElevatedButton(
+                onPressed: () async {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: const Text('My Location'),
+              ),
             ],
           ),
         ),

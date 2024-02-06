@@ -28,10 +28,16 @@ class StoryProvider extends ChangeNotifier {
     final result =
         await storyRepository.getStories(page: pageItems, size: sizeItems);
 
-    if (result.listStory!.isNotEmpty) {
-      for (final item in result.listStory!) {
-        if (!_listStory.map((e) => e.id).toList().contains(item.id)) {
-          _listStory.add(item);
+    if (pageItems == 1) {
+      _listStory
+        ..clear()
+        ..addAll(result.listStory!);
+    } else {
+      if (result.listStory!.isNotEmpty) {
+        for (final item in result.listStory!) {
+          if (!_listStory.map((e) => e.id).toList().contains(item.id)) {
+            _listStory.add(item);
+          }
         }
       }
     }
