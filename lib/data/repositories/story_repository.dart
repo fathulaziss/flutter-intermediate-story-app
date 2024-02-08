@@ -3,6 +3,7 @@ import 'package:flutter_intermediate_story_app/data/api/api_service.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_model.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_stories_detail_model.dart';
 import 'package:flutter_intermediate_story_app/data/model/response_stories_model.dart';
+import 'package:flutter_intermediate_story_app/services/flavor_config.dart';
 import 'package:image/image.dart' as img;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,14 +11,17 @@ class StoryRepository {
   final String tokenKey = 'token';
 
   Future<ResponseStoriesModel> getStories({
-    int location = 1,
     int? page,
     int? size,
   }) async {
     final preferences = await SharedPreferences.getInstance();
     final token = preferences.getString(tokenKey);
-    final result = await ApiService()
-        .getStories('$token', location: location, page: page, size: size);
+    final result = await ApiService().getStories(
+      '$token',
+      location: FlavorConfig.instance.flavor == FlavorType.paid ? 1 : 0,
+      page: page,
+      size: size,
+    );
     return result;
   }
 

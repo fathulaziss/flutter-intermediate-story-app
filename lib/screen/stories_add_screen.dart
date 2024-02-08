@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
+import 'package:flutter_intermediate_story_app/services/flavor_config.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -127,14 +128,17 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                     '${placemark?.subLocality}, ${placemark?.locality}, ${placemark?.postalCode}, ${placemark?.country}',
                   ),
                 ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: () async {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  await getMyLocation();
-                },
-                child: const Text('Lampirkan Lokasi Anda'),
-              ),
+              if (FlavorConfig.instance.flavor == FlavorType.paid)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      await getMyLocation();
+                    },
+                    child: const Text('Lampirkan Lokasi Anda'),
+                  ),
+                ),
               const SizedBox(height: 12),
               if (context.watch<StoryProvider>().isLoadingStoriesUpload)
                 const Center(child: CircularProgressIndicator())

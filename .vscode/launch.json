@@ -1,0 +1,112 @@
+{
+    "configurations": [
+      {
+        "name": "free_debug_android",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_free.dart",
+        "flutterMode": "debug",
+        "args": [
+          "--flavor",
+          "free"
+        ]
+      },
+      {
+        "name": "free_profile_android",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_free.dart",
+        "flutterMode": "profile",
+        "args": [
+          "--flavor",
+          "free"
+        ]
+      },
+      {
+        "name": "free_release_android",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_free.dart",
+        "flutterMode": "release",
+        "args": [
+          "--flavor",
+          "free"
+        ]
+      },
+      {
+        "name": "free_debug_ios",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_free.dart",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "free_profile_ios",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_free.dart",
+        "flutterMode": "profile"
+      },
+      {
+        "name": "free_release_ios",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_free.dart",
+        "flutterMode": "release"
+      },
+      {
+        "name": "paid_debug_android",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main_paid.dart",
+        "flutterMode": "debug",
+        "args": [
+          "--flavor",
+          "paid"
+        ]
+      },
+      {
+        "name": "paid_profile_android",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main_paid.dart",
+        "flutterMode": "profile",
+        "args": [
+          "--flavor",
+          "paid"
+        ]
+      },
+      {
+        "name": "paid_release_android",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main_paid.dart",
+        "flutterMode": "release",
+        "args": [
+          "--flavor",
+          "paid"
+        ]
+      },
+      {
+        "name": "paid_debug_ios",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main_paid.dart",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "paid_profile_ios",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main_paid.dart",
+        "flutterMode": "profile"
+      },
+      {
+        "name": "paid_release_ios",
+        "type": "dart",
+        "request": "launch",
+        "program": "lib/main_paid.dart",
+        "flutterMode": "release"
+      }
+    ]
+  }

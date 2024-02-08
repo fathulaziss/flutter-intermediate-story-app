@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
+import 'package:flutter_intermediate_story_app/services/flavor_config.dart';
 import 'package:flutter_intermediate_story_app/widgets/stories_card.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Story'),
+        title: Text(FlavorConfig.instance.values.titleApp),
         actions: [
           if (context.watch<AuthProvider>().isLoadingLogout)
             const Center(child: CircularProgressIndicator(color: Colors.white))
