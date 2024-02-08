@@ -6,6 +6,7 @@ import 'package:flutter_intermediate_story_app/data/repositories/auth_repository
 import 'package:flutter_intermediate_story_app/routes/page_configuration.dart';
 import 'package:flutter_intermediate_story_app/screen/home_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/login_screen.dart';
+import 'package:flutter_intermediate_story_app/screen/map_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/register_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/splash_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/stories_add_screen.dart';
@@ -27,6 +28,9 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
   bool? isUnknown;
   String? selectedStory;
   bool? isAddStory;
+  bool? isMap;
+  double? latitudeStory;
+  double? longitudeStory;
 
   Future<void> _init() async {
     isLoggedIn = await authRepository.isLoggedIn();
@@ -88,7 +92,21 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         if (selectedStory != null)
           MaterialPage(
             key: const ValueKey('StoriesDetailPage'),
-            child: StoriesDetailScreen(storyId: '$selectedStory'),
+            child: StoriesDetailScreen(
+              storyId: '$selectedStory',
+              onOpenMap: (latitude, longitude) {
+                isMap = true;
+                latitudeStory = latitude;
+                longitudeStory = longitude;
+                notifyListeners();
+              },
+            ),
+          ),
+        if (isMap == true)
+          MaterialPage(
+            key: const ValueKey('MapPage'),
+            child:
+                MapScreen(latitude: latitudeStory, longitude: longitudeStory),
           ),
         if (isAddStory == true)
           MaterialPage(
@@ -125,6 +143,9 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         isRegister = false;
         selectedStory = null;
         isAddStory = null;
+        isMap = null;
+        latitudeStory = null;
+        longitudeStory = null;
         notifyListeners();
 
         return true;
@@ -148,16 +169,26 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
       isUnknown = false;
       selectedStory = null;
       isAddStory = null;
+      isMap = null;
       isRegister = false;
     } else if (configuration.isStoriesDetailPage) {
       isUnknown = false;
       isRegister = false;
+      isMap = null;
+      isAddStory = null;
       selectedStory = configuration.storyId.toString();
     } else if (configuration.isAddStoryPage) {
       isUnknown = false;
       isRegister = false;
       selectedStory = null;
+      isMap = null;
       isAddStory = true;
+    } else if (configuration.isMapPage) {
+      isUnknown = false;
+      isRegister = false;
+      selectedStory = null;
+      isAddStory = null;
+      isMap = true;
     } else {
       if (kDebugMode) {
         log('Could not set new route');

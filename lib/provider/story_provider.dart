@@ -63,7 +63,11 @@ class StoryProvider extends ChangeNotifier {
     return result;
   }
 
-  Future<ResponseModel> uploadStory(String description) async {
+  Future<ResponseModel> uploadStory({
+    required String description,
+    double? latitude,
+    double? longitude,
+  }) async {
     isLoadingStoriesUpload = true;
 
     final fileName = imageFile!.name;
@@ -74,6 +78,8 @@ class StoryProvider extends ChangeNotifier {
       bytesPhoto: newBytes,
       fileName: fileName,
       description: description,
+      latitude: latitude,
+      longitude: longitude,
     );
 
     isLoadingStoriesUpload = false;

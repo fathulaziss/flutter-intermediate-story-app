@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -5,7 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
+import 'package:geocoding/geocoding.dart' as geo;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 class StoriesAddScreen extends StatefulWidget {
@@ -20,11 +24,51 @@ class StoriesAddScreen extends StatefulWidget {
 class _StoriesAddScreenState extends State<StoriesAddScreen> {
   final descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  LatLng? myLocation;
+  geo.Placemark? placemark;
 
   @override
   void dispose() {
     descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> getMyLocation() async {
+    final location = Location();
+    late bool serviceEnabled;
+    late PermissionStatus permissionGranted;
+    late LocationData locationData;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        log('Location services is not available');
+
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        log('Location permission is denied');
+
+        return;
+      }
+    }
+
+    locationData = await location.getLocation();
+    final info = await geo.placemarkFromCoordinates(
+      locationData.latitude!,
+      locationData.longitude!,
+    );
+
+    setState(() {
+      placemark = info[0];
+      myLocation = LatLng(locationData.latitude!, locationData.longitude!);
+    });
   }
 
   @override
@@ -76,6 +120,21 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                   ),
                 ),
               ),
+              if (placemark != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    '${placemark?.subLocality}, ${placemark?.locality}, ${placemark?.postalCode}, ${placemark?.country}',
+                  ),
+                ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () async {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  await getMyLocation();
+                },
+                child: const Text('Lampirkan Lokasi Anda'),
+              ),
               const SizedBox(height: 12),
               if (context.watch<StoryProvider>().isLoadingStoriesUpload)
                 const Center(child: CircularProgressIndicator())
@@ -88,8 +147,11 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                     if (formKey.currentState!.validate()) {
                       if (context.read<StoryProvider>().imagePath != null) {
                         final storyRead = context.read<StoryProvider>();
-                        final result = await storyRead
-                            .uploadStory(descriptionController.text);
+                        final result = await storyRead.uploadStory(
+                          description: descriptionController.text,
+                          latitude: myLocation?.latitude,
+                          longitude: myLocation?.longitude,
+                        );
                         scaffoldMessenger.showSnackBar(
                           SnackBar(content: Text('${result.message}')),
                         );
@@ -111,12 +173,6 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                   },
                   child: const Text('Upload'),
                 ),
-              ElevatedButton(
-                onPressed: () async {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                child: const Text('My Location'),
-              ),
             ],
           ),
         ),

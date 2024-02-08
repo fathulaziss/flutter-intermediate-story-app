@@ -62,12 +62,18 @@ class ApiService {
     required List<int> bytesPhoto,
     required String fileName,
     required String description,
+    double? latitude,
+    double? longitude,
   }) async {
     const url = 'https://story-api.dicoding.dev/v1/stories';
     final request = http.MultipartRequest('POST', Uri.parse(url));
     final multiPartFile =
         http.MultipartFile.fromBytes('photo', bytesPhoto, filename: fileName);
-    final fields = {'description': description};
+    final fields = {
+      'description': description,
+      'lat': '$latitude',
+      'lon': '$longitude',
+    };
     final headers = {
       'Content-type': 'multipart/form-data',
       'Authorization': 'Bearer $token',

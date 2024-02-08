@@ -22,6 +22,8 @@ class MyRouteInformationParser
         return PageConfiguration.home();
       } else if (pathSegmentFirst == 'stories-add') {
         return PageConfiguration.addStory();
+      } else if (pathSegmentFirst == 'map') {
+        return PageConfiguration.map();
       } else {
         return PageConfiguration.unknown();
       }
@@ -56,6 +58,8 @@ class MyRouteInformationParser
       );
     } else if (configuration.isAddStoryPage) {
       return RouteInformation(uri: Uri.parse('/stories-add'));
+    } else if (configuration.isMapPage) {
+      return RouteInformation(uri: Uri.parse('/map'));
     } else {
       return null;
     }

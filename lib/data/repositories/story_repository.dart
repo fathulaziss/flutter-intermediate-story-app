@@ -10,7 +10,7 @@ class StoryRepository {
   final String tokenKey = 'token';
 
   Future<ResponseStoriesModel> getStories({
-    int location = 0,
+    int location = 1,
     int? page,
     int? size,
   }) async {
@@ -33,6 +33,8 @@ class StoryRepository {
     required List<int> bytesPhoto,
     required String fileName,
     required String description,
+    double? latitude,
+    double? longitude,
   }) async {
     final preferences = await SharedPreferences.getInstance();
     final token = preferences.getString(tokenKey);
@@ -41,6 +43,8 @@ class StoryRepository {
       bytesPhoto: bytesPhoto,
       fileName: fileName,
       description: description,
+      latitude: latitude,
+      longitude: longitude,
     );
     return result;
   }

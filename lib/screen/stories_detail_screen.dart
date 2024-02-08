@@ -5,9 +5,14 @@ import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
 import 'package:provider/provider.dart';
 
 class StoriesDetailScreen extends StatefulWidget {
-  const StoriesDetailScreen({super.key, required this.storyId});
+  const StoriesDetailScreen({
+    super.key,
+    required this.storyId,
+    required this.onOpenMap,
+  });
 
   final String storyId;
+  final Function(double latitude, double longitude) onOpenMap;
 
   @override
   State<StoriesDetailScreen> createState() => _StoriesDetailScreenState();
@@ -39,7 +44,7 @@ class _StoriesDetailScreenState extends State<StoriesDetailScreen> {
           ? const Center(child: CircularProgressIndicator())
           : stories != null
               ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CachedNetworkImage(
                       imageUrl: stories!.photoUrl!,
@@ -66,6 +71,12 @@ class _StoriesDetailScreenState extends State<StoriesDetailScreen> {
                     Text(stories!.description!),
                     Text('${stories?.lat ?? '-'}'),
                     Text('${stories?.lon ?? '-'}'),
+                    ElevatedButton(
+                      onPressed: () {
+                        widget.onOpenMap(stories?.lat ?? 0, stories?.lon ?? 0);
+                      },
+                      child: const Text('Buka Peta'),
+                    ),
                   ],
                 )
               : const Center(child: Text('Data tidak ditemukan')),
