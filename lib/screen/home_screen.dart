@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
-import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
 import 'package:flutter_intermediate_story_app/services/flavor_config.dart';
 import 'package:flutter_intermediate_story_app/widgets/stories_card.dart';
@@ -80,10 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
           widget.onAddStory();
 
-          final dataString = await context.read<PageProvider>().waitForResult();
-
-          if (dataString.isNotEmpty) {
-            if (context.mounted) {
+          if (context.mounted) {
+            if (context.read<StoryProvider>().isUploadDone) {
+              context.read<StoryProvider>().setUploadStatus(value: false);
               context.read<StoryProvider>().setPageItem(1);
               await context.read<StoryProvider>().getStories();
             }
@@ -97,7 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Consumer<StoryProvider>(
         builder: (context, storyProvider, _) {
-          if (storyProvider.isLoadingStories) {
+          if (storyProvider.listStory.isEmpty &&
+              storyProvider.isLoadingStories) {
             return const Center(child: CircularProgressIndicator());
           }
           if (storyProvider.listStory.isNotEmpty) {
@@ -108,12 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 final data = storyProvider.listStory[index];
 
                 if (data == storyProvider.listStory.last) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
+                  if (storyProvider.isLoadingStories) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
                 }
 
                 return StoriesCard(
@@ -128,33 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return const Center(child: Text('Data tidak ditemukan'));
         },
       ),
-      // body: context.watch<StoryProvider>().isLoadingStories
-      //     ? const Center(child: CircularProgressIndicator())
-      //     : listStory!.isNotEmpty
-      //         ? ListView.builder(
-      //             controller: scrollController,
-      //             itemCount: listStory?.length,
-      //             itemBuilder: (context, index) {
-      //               final data = listStory![index];
-
-      //               if (data == listStory?.last) {
-      //                 return const Center(
-      //                   child: Padding(
-      //                     padding: EdgeInsets.all(8),
-      //                     child: CircularProgressIndicator(),
-      //                   ),
-      //                 );
-      //               }
-
-      //               return StoriesCard(
-      //                 data: data,
-      //                 onTap: () {
-      //                   widget.onStoryDetail(data.id!);
-      //                 },
-      //               );
-      //             },
-      //           )
-      //         : const Center(child: Text('Data tidak ditemukan')),
     );
   }
 }

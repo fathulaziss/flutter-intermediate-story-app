@@ -24,6 +24,8 @@ class MyRouteInformationParser
         return PageConfiguration.addStory();
       } else if (pathSegmentFirst == 'map') {
         return PageConfiguration.map();
+      } else if (pathSegmentFirst == 'location') {
+        return PageConfiguration.location();
       } else {
         return PageConfiguration.unknown();
       }
@@ -56,10 +58,12 @@ class MyRouteInformationParser
       return RouteInformation(
         uri: Uri.parse('/stories-detail/${configuration.storyId}'),
       );
-    } else if (configuration.isAddStoryPage) {
-      return RouteInformation(uri: Uri.parse('/stories-add'));
     } else if (configuration.isMapPage) {
       return RouteInformation(uri: Uri.parse('/map'));
+    } else if (configuration.isAddStoryPage) {
+      return RouteInformation(uri: Uri.parse('/stories-add'));
+    } else if (configuration.isLocationPage) {
+      return RouteInformation(uri: Uri.parse('/location'));
     } else {
       return null;
     }

@@ -13,6 +13,8 @@ class StoryProvider extends ChangeNotifier {
   bool isLoadingStoriesDetail = false;
   bool isLoadingStoriesUpload = false;
 
+  bool isUploadDone = false;
+
   final List<StoriesModel> _listStory = [];
   List<StoriesModel> get listStory => _listStory;
 
@@ -32,6 +34,7 @@ class StoryProvider extends ChangeNotifier {
       _listStory
         ..clear()
         ..addAll(result.listStory);
+      notifyListeners();
     } else {
       if (result.listStory.isNotEmpty) {
         for (final item in result.listStory) {
@@ -69,6 +72,7 @@ class StoryProvider extends ChangeNotifier {
     double? longitude,
   }) async {
     isLoadingStoriesUpload = true;
+    notifyListeners();
 
     final fileName = imageFile!.name;
     final bytes = await imageFile!.readAsBytes();
@@ -105,6 +109,11 @@ class StoryProvider extends ChangeNotifier {
 
   void setPageItem(int value) {
     pageItems = value;
+    notifyListeners();
+  }
+
+  void setUploadStatus({required bool value}) {
+    isUploadDone = value;
     notifyListeners();
   }
 }

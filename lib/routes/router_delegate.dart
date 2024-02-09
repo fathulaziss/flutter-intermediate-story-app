@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/data/repositories/auth_repository.dart';
 import 'package:flutter_intermediate_story_app/routes/page_configuration.dart';
 import 'package:flutter_intermediate_story_app/screen/home_screen.dart';
+import 'package:flutter_intermediate_story_app/screen/location_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/login_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/map_screen.dart';
 import 'package:flutter_intermediate_story_app/screen/register_screen.dart';
@@ -27,8 +28,9 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
   bool isRegister = false;
   bool? isUnknown;
   String? selectedStory;
-  bool? isAddStory;
   bool? isMap;
+  bool? isAddStory;
+  bool? isLocation;
   double? latitudeStory;
   double? longitudeStory;
 
@@ -116,6 +118,20 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
                 isAddStory = null;
                 notifyListeners();
               },
+              onLocation: () {
+                isLocation = true;
+                notifyListeners();
+              },
+            ),
+          ),
+        if (isLocation == true)
+          MaterialPage(
+            key: const ValueKey('LocationPage'),
+            child: LocationScreen(
+              onSelectLocation: () {
+                isLocation = null;
+                notifyListeners();
+              },
             ),
           ),
       ];
@@ -140,13 +156,25 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
           return false;
         }
 
-        isRegister = false;
-        selectedStory = null;
-        isAddStory = null;
-        isMap = null;
-        latitudeStory = null;
-        longitudeStory = null;
-        notifyListeners();
+        if (isMap == true || isLocation == true) {
+          isMap = null;
+          isLocation = null;
+          selectedStory = selectedStory;
+          isRegister = false;
+          isAddStory = isAddStory;
+          latitudeStory = null;
+          longitudeStory = null;
+          notifyListeners();
+        } else {
+          isRegister = false;
+          isMap = null;
+          isLocation = null;
+          selectedStory = null;
+          isAddStory = null;
+          latitudeStory = null;
+          longitudeStory = null;
+          notifyListeners();
+        }
 
         return true;
       },
@@ -168,27 +196,38 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         configuration.isSplashPage) {
       isUnknown = false;
       selectedStory = null;
-      isAddStory = null;
       isMap = null;
+      isAddStory = null;
+      isLocation = null;
       isRegister = false;
     } else if (configuration.isStoriesDetailPage) {
       isUnknown = false;
       isRegister = false;
+      selectedStory = configuration.storyId.toString();
       isMap = null;
       isAddStory = null;
+      isLocation = null;
+    } else if (configuration.isMapPage) {
+      isUnknown = false;
+      isRegister = false;
       selectedStory = configuration.storyId.toString();
+      isMap = true;
+      isAddStory = null;
+      isLocation = null;
     } else if (configuration.isAddStoryPage) {
       isUnknown = false;
       isRegister = false;
       selectedStory = null;
       isMap = null;
       isAddStory = true;
-    } else if (configuration.isMapPage) {
+      isLocation = null;
+    } else if (configuration.isLocationPage) {
       isUnknown = false;
       isRegister = false;
       selectedStory = null;
-      isAddStory = null;
-      isMap = true;
+      isMap = null;
+      isAddStory = true;
+      isLocation = true;
     } else {
       if (kDebugMode) {
         log('Could not set new route');
@@ -211,8 +250,12 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
       return PageConfiguration.home();
     } else if (selectedStory != null) {
       return PageConfiguration.storiesDetail(selectedStory!);
+    } else if (isMap == true) {
+      return PageConfiguration.map();
     } else if (isAddStory == true) {
       return PageConfiguration.addStory();
+    } else if (isLocation == true) {
+      return PageConfiguration.location();
     } else {
       return null;
     }

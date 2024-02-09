@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,13 +10,17 @@ import 'package:flutter_intermediate_story_app/services/flavor_config.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 class StoriesAddScreen extends StatefulWidget {
-  const StoriesAddScreen({super.key, required this.onUpload});
+  const StoriesAddScreen({
+    super.key,
+    required this.onUpload,
+    required this.onLocation,
+  });
 
   final Function() onUpload;
+  final Function() onLocation;
 
   @override
   State<StoriesAddScreen> createState() => _StoriesAddScreenState();
@@ -34,41 +38,12 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
     super.dispose();
   }
 
-  Future<void> getMyLocation() async {
-    final location = Location();
-    late bool serviceEnabled;
-    late PermissionStatus permissionGranted;
-    late LocationData locationData;
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        log('Location services is not available');
-
-        return;
-      }
-    }
-
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        log('Location permission is denied');
-
-        return;
-      }
-    }
-
-    locationData = await location.getLocation();
-    final info = await geo.placemarkFromCoordinates(
-      locationData.latitude!,
-      locationData.longitude!,
-    );
+  Future<void> getMyLocation(double lat, double lon) async {
+    final info = await geo.placemarkFromCoordinates(lat, lon);
 
     setState(() {
       placemark = info[0];
-      myLocation = LatLng(locationData.latitude!, locationData.longitude!);
+      myLocation = LatLng(lat, lon);
     });
   }
 
@@ -134,7 +109,16 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       FocusManager.instance.primaryFocus?.unfocus();
-                      await getMyLocation();
+                      widget.onLocation();
+
+                      final dataString =
+                          await context.read<PageProvider>().waitForResult();
+
+                      if (dataString.isNotEmpty) {
+                        final data = jsonDecode(dataString);
+                        await getMyLocation(data['lat'], data['lon']);
+                      }
+                      setState(() {});
                     },
                     child: const Text('Lampirkan Lokasi Anda'),
                   ),
@@ -162,9 +146,10 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                         if (result.error != true) {
                           descriptionController.clear();
                           widget.onUpload();
-                          if (context.mounted) {
-                            context.read<PageProvider>().returnData('success');
-                          }
+                          storyRead.setUploadStatus(value: true);
+                          // if (context.mounted) {
+                          //   context.read<PageProvider>().returnData('success');
+                          // }
                         }
                       } else {
                         scaffoldMessenger.showSnackBar(
