@@ -41,6 +41,7 @@ class ApiService {
       Uri.parse(url),
       headers: {'Authorization': 'Bearer $token'},
     );
+
     return ResponseStoriesModel.fromJson(jsonDecode(response.body));
   }
 

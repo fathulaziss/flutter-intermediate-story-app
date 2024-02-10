@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
-import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
 import 'package:flutter_intermediate_story_app/services/flavor_config.dart';
 import 'package:flutter_intermediate_story_app/widgets/stories_card.dart';
@@ -33,11 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {
-        storyRead.getMoreStories();
+        if (storyRead.pageItems != null) {
+          storyRead.getStories();
+        }
       }
     });
 
-    Future.microtask(() async => storyRead.getInitStories());
+    Future.microtask(() async => storyRead.getStories());
   }
 
   @override
@@ -76,16 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () async {
           context.read<StoryProvider>()
             ..setImageFile(null)
-            ..setImagePath(null);
+            ..setImagePath(null)
+            ..setPageItem(1);
 
           widget.onAddStory();
-
-          final dataString = await context.read<PageProvider>().waitForResult();
-          if (dataString.isNotEmpty) {
-            if (context.mounted) {
-              await context.read<StoryProvider>().getStories();
-            }
-          }
         },
         icon: const Icon(
           Icons.add_circle,
@@ -98,23 +93,23 @@ class _HomeScreenState extends State<HomeScreen> {
           if (storyProvider.listStory.isEmpty &&
               storyProvider.isLoadingStories) {
             return const Center(child: CircularProgressIndicator());
-          }
-          if (storyProvider.listStory.isNotEmpty) {
+          } else if (storyProvider.listStory.isNotEmpty &&
+              !storyProvider.isLoadingStories) {
+            final listStory = storyProvider.listStory;
+
             return ListView.builder(
               controller: scrollController,
-              itemCount: storyProvider.listStory.length,
+              itemCount: listStory.length,
               itemBuilder: (context, index) {
-                final data = storyProvider.listStory[index];
+                final data = listStory[index];
 
-                if (data == storyProvider.listStory.last) {
-                  if (storyProvider.isLoadingStories) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
+                if (data == listStory.last && storyProvider.pageItems != null) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
                 }
 
                 return StoriesCard(
@@ -125,8 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             );
+          } else {
+            return const Center(child: Text('Data tidak ditemukan'));
           }
-          return const Center(child: Text('Data tidak ditemukan'));
         },
       ),
     );

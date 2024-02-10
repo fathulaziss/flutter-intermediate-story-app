@@ -13,8 +13,7 @@ class StoryProvider extends ChangeNotifier {
   bool isLoadingStoriesDetail = false;
   bool isLoadingStoriesUpload = false;
 
-  final List<StoriesModel> _listStory = [];
-  List<StoriesModel> get listStory => _listStory;
+  List<StoriesModel> listStory = [];
 
   int? pageItems = 1;
   int sizeItems = 10;
@@ -22,59 +21,31 @@ class StoryProvider extends ChangeNotifier {
   XFile? imageFile;
   String? imagePath;
 
-  Future<void> getInitStories() async {
-    isLoadingStories = true;
-
-    final result = await storyRepository.getStories(page: 1, size: sizeItems);
-
-    if (result.listStory.isNotEmpty) {
-      _listStory.addAll(result.listStory);
-    }
-
-    isLoadingStories = false;
-    notifyListeners();
-  }
-
   Future<void> getStories() async {
-    isLoadingStories = true;
-    notifyListeners();
+    try {
+      if (pageItems == 1) {
+        isLoadingStories = true;
+        listStory.clear();
+        notifyListeners();
+      }
 
-    final result = await storyRepository.getStories(page: 1, size: sizeItems);
+      final result =
+          await storyRepository.getStories(page: pageItems, size: sizeItems);
 
-    if (result.listStory.isNotEmpty) {
-      _listStory
-        ..clear()
-        ..addAll(result.listStory);
+      listStory.addAll(result.listStory);
+
+      if (result.listStory.length < sizeItems) {
+        pageItems = null;
+      } else {
+        pageItems = pageItems! + 1;
+      }
+
+      isLoadingStories = false;
+      notifyListeners();
+    } catch (e) {
+      isLoadingStories = false;
       notifyListeners();
     }
-
-    isLoadingStories = false;
-    notifyListeners();
-  }
-
-  Future<void> getMoreStories() async {
-    isLoadingStories = true;
-    notifyListeners();
-
-    final result =
-        await storyRepository.getStories(page: pageItems, size: sizeItems);
-
-    if (result.listStory.isNotEmpty) {
-      for (final item in result.listStory) {
-        if (!_listStory.map((e) => e.id).toList().contains(item.id)) {
-          _listStory.add(item);
-        }
-      }
-    }
-
-    if (result.listStory.length < sizeItems) {
-      pageItems = pageItems;
-    } else {
-      pageItems = pageItems! + 1;
-    }
-
-    isLoadingStories = false;
-    notifyListeners();
   }
 
   Future<ResponseStoriesDetailModel> getStoriesDetail(String storyId) async {
