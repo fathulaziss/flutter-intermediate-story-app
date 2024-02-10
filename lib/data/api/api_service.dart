@@ -69,11 +69,13 @@ class ApiService {
     final request = http.MultipartRequest('POST', Uri.parse(url));
     final multiPartFile =
         http.MultipartFile.fromBytes('photo', bytesPhoto, filename: fileName);
-    final fields = {
-      'description': description,
-      'lat': '$latitude',
-      'lon': '$longitude',
-    };
+    final fields = {'description': description};
+
+    if (latitude != null && longitude != null) {
+      fields['lat'] = '$latitude';
+      fields['lon'] = '$longitude';
+    }
+
     final headers = {
       'Content-type': 'multipart/form-data',
       'Authorization': 'Bearer $token',

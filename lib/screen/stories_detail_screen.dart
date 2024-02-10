@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/data/model/stories_model.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
-import 'package:flutter_intermediate_story_app/services/flavor_config.dart';
 import 'package:provider/provider.dart';
 
 class StoriesDetailScreen extends StatefulWidget {
@@ -72,7 +71,7 @@ class _StoriesDetailScreenState extends State<StoriesDetailScreen> {
                     Text(stories!.description!),
                     Text('${stories?.lat ?? '-'}'),
                     Text('${stories?.lon ?? '-'}'),
-                    if (FlavorConfig.instance.flavor == FlavorType.paid)
+                    if (stories!.lat != null && stories!.lon != null)
                       ElevatedButton(
                         onPressed: () {
                           widget.onOpenMap(

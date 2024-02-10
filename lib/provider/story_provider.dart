@@ -13,8 +13,6 @@ class StoryProvider extends ChangeNotifier {
   bool isLoadingStoriesDetail = false;
   bool isLoadingStoriesUpload = false;
 
-  bool isUploadDone = false;
-
   final List<StoriesModel> _listStory = [];
   List<StoriesModel> get listStory => _listStory;
 
@@ -24,23 +22,47 @@ class StoryProvider extends ChangeNotifier {
   XFile? imageFile;
   String? imagePath;
 
-  Future<void> getStories() async {
+  Future<void> getInitStories() async {
     isLoadingStories = true;
 
-    final result =
-        await storyRepository.getStories(page: pageItems, size: sizeItems);
+    final result = await storyRepository.getStories(page: 1, size: sizeItems);
 
-    if (pageItems == 1) {
+    if (result.listStory.isNotEmpty) {
+      _listStory.addAll(result.listStory);
+    }
+
+    isLoadingStories = false;
+    notifyListeners();
+  }
+
+  Future<void> getStories() async {
+    isLoadingStories = true;
+    notifyListeners();
+
+    final result = await storyRepository.getStories(page: 1, size: sizeItems);
+
+    if (result.listStory.isNotEmpty) {
       _listStory
         ..clear()
         ..addAll(result.listStory);
       notifyListeners();
-    } else {
-      if (result.listStory.isNotEmpty) {
-        for (final item in result.listStory) {
-          if (!_listStory.map((e) => e.id).toList().contains(item.id)) {
-            _listStory.add(item);
-          }
+    }
+
+    isLoadingStories = false;
+    notifyListeners();
+  }
+
+  Future<void> getMoreStories() async {
+    isLoadingStories = true;
+    notifyListeners();
+
+    final result =
+        await storyRepository.getStories(page: pageItems, size: sizeItems);
+
+    if (result.listStory.isNotEmpty) {
+      for (final item in result.listStory) {
+        if (!_listStory.map((e) => e.id).toList().contains(item.id)) {
+          _listStory.add(item);
         }
       }
     }
@@ -109,11 +131,6 @@ class StoryProvider extends ChangeNotifier {
 
   void setPageItem(int value) {
     pageItems = value;
-    notifyListeners();
-  }
-
-  void setUploadStatus({required bool value}) {
-    isUploadDone = value;
     notifyListeners();
   }
 }

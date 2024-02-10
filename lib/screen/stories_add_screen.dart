@@ -146,10 +146,9 @@ class _StoriesAddScreenState extends State<StoriesAddScreen> {
                         if (result.error != true) {
                           descriptionController.clear();
                           widget.onUpload();
-                          storyRead.setUploadStatus(value: true);
-                          // if (context.mounted) {
-                          //   context.read<PageProvider>().returnData('success');
-                          // }
+                          if (context.mounted) {
+                            context.read<PageProvider>().returnData('success');
+                          }
                         }
                       } else {
                         scaffoldMessenger.showSnackBar(

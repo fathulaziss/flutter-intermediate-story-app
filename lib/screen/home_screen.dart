@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate_story_app/provider/auth_provider.dart';
+import 'package:flutter_intermediate_story_app/provider/page_provider.dart';
 import 'package:flutter_intermediate_story_app/provider/story_provider.dart';
 import 'package:flutter_intermediate_story_app/services/flavor_config.dart';
 import 'package:flutter_intermediate_story_app/widgets/stories_card.dart';
@@ -32,11 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {
-        storyRead.getStories();
+        storyRead.getMoreStories();
       }
     });
 
-    Future.microtask(() async => storyRead.getStories());
+    Future.microtask(() async => storyRead.getInitStories());
   }
 
   @override
@@ -79,10 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
           widget.onAddStory();
 
-          if (context.mounted) {
-            if (context.read<StoryProvider>().isUploadDone) {
-              context.read<StoryProvider>().setUploadStatus(value: false);
-              context.read<StoryProvider>().setPageItem(1);
+          final dataString = await context.read<PageProvider>().waitForResult();
+          if (dataString.isNotEmpty) {
+            if (context.mounted) {
               await context.read<StoryProvider>().getStories();
             }
           }
